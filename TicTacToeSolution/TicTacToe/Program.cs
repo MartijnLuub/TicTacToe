@@ -25,7 +25,7 @@ namespace TicTacToe
             //Turn player 1
             while (!WinRow(map) && !WinColumn(map) && !WinDiagonal(map) && !MapFull(map))
             {
-                Console.WriteLine("{0}. It is your turn!", player1);
+                PrintTurnAnnouncment(player1);
                 GameTurn(map, out int xChoice, out int yChoice, out bool result1, out bool result2);
                 map[xChoice - 1, yChoice - 1] = "1";
                 Mapgrid(map);
@@ -37,7 +37,7 @@ namespace TicTacToe
                 else
                 {
                     //Turn player 2
-                    Console.WriteLine("{0}. It is your turn!", player2);
+                    PrintTurnAnnouncment(player2);
                     GameTurn(map, out xChoice, out yChoice, out result1, out result2);
                     map[xChoice - 1, yChoice - 1] = "2";
                     Mapgrid(map);
@@ -88,6 +88,12 @@ namespace TicTacToe
             Console.ReadLine();
         }
 
+        //announces the player whoms turn it is
+        private static void PrintTurnAnnouncment(string player)
+        {
+            Console.WriteLine("{0}. It is your turn!", player);
+        }
+
         //intro tot the game
         private static void Intro(out string player1, out string player2)
         {
@@ -133,7 +139,7 @@ namespace TicTacToe
                     Console.WriteLine("Wrong input, please enter 1, 2 or 3.");
                     result2 = int.TryParse(Console.ReadLine(), out yChoice);
                 }
-                if (map[yChoice - 1, xChoice - 1] != "0")
+                if (map[xChoice - 1, yChoice-1] != "0")
                 {
                     Console.WriteLine("This space is taken. Please, try again");
                 }
