@@ -36,7 +36,7 @@ namespace TicTacToe
                 }
                 else
                 {
-                    //beurt speler 2
+                    //Turn player 2
                     Console.WriteLine("{0}. It is your turn!", player2);
                     GameTurn(map, out xChoice, out yChoice, out result1, out result2);
                     map[xChoice - 1, yChoice - 1] = "2";
@@ -162,10 +162,12 @@ namespace TicTacToe
                         Console.Write("O");
                     }
                 }
+                Console.Write(i + 1);
                 Console.WriteLine();
             }
-
+            Console.WriteLine(" 123");
         }
+
         // win check methods for three in a row, column and diagonally
         public static bool WinRow(string[,] map)
         {
