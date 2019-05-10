@@ -10,21 +10,18 @@ namespace TicTacToe
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("*** Tic Tac Toe ***");
-            Console.WriteLine("Welcome to the game Tic Tac Toe!");
-            string player1 = Player(1);
-            string player2 = Player(2);
-            Console.WriteLine("Lets play\n");
+            string player1, player2;
+            Intro(out player1, out player2);
 
             // print the map
-            string[,] map = new string[3,3] 
+            string[,] map = new string[3, 3]
             {
-            {"0","0", "0"}, 
-            {"0", "0", "0"}, 
+            {"0","0", "0"},
+            {"0", "0", "0"},
             {"0" ,"0", "0"}
             };
             Mapgrid(map);
-                   
+
             //Turn player 1
             while (!WinRow(map) && !WinColumn(map) && !WinDiagonal(map) && !MapFull(map))
             {
@@ -33,7 +30,7 @@ namespace TicTacToe
                 map[xChoice - 1, yChoice - 1] = "1";
                 Mapgrid(map);
                 Console.WriteLine();
-                if (WinRow(map) || WinColumn(map) || WinDiagonal(map))
+                if (WinRow(map) || WinColumn(map) || WinDiagonal(map) || MapFull(map))
                 {
                     break;
                 }
@@ -51,48 +48,58 @@ namespace TicTacToe
             //check who won
             if (WinRow(map))
             {
-                if ((map[0, 0] == "1" && map[0, 1] == "1" && map[0,2] == "1") || (map[1, 0] == "1" && map[1, 1] == "1" && map[1,2] == "1") || (map[2, 0] == "1" && map[2, 1] == "1" && map[2,2] =="1"))
+                if ((map[0, 0] == "1" && map[0, 1] == "1" && map[0, 2] == "1") || (map[1, 0] == "1" && map[1, 1] == "1" && map[1, 2] == "1") || (map[2, 0] == "1" && map[2, 1] == "1" && map[2, 2] == "1"))
                 {
-                    Console.WriteLine("Well done {0}, YOU WON!",player1);
+                    PrintVictoryLine(player1);
                 }
                 else
                 {
-                    Console.WriteLine("Well done {0}, YOU WON!",player2);
+                    PrintVictoryLine(player2);
                 }
             }
             if (WinColumn(map))
             {
-                if ((map[0, 0] == "1" && map[1, 0] =="1" && map[2,0] == "1") || (map[0, 1] == "1" && map [1,1] =="1" && map[2, 1] == "1") || (map[0, 2] == "1") && map[1,2] =="1" && map[2, 2] == "1")
+                if ((map[0, 0] == "1" && map[1, 0] == "1" && map[2, 0] == "1") || (map[0, 1] == "1" && map[1, 1] == "1" && map[2, 1] == "1") || (map[0, 2] == "1") && map[1, 2] == "1" && map[2, 2] == "1")
                 {
-                    Console.WriteLine("Well done {0}, YOU WON!", player1);
+                    PrintVictoryLine(player1);
                 }
                 else
                 {
-                    Console.WriteLine("Well done {0}, YOU WON!", player2);
+                    PrintVictoryLine(player2);
                 }
             }
             if (WinDiagonal(map))
             {
-                if (map[1,1] == "1")
+                if (map[1, 1] == "1")
                 {
-                    Console.WriteLine("Well done {0}, YOU WON!", player1);
+                    PrintVictoryLine(player1);
                 }
                 else
                 {
-                    Console.WriteLine("Well done {0}, YOU WON!", player2);
+                    PrintVictoryLine(player2);
                 }
             }
             if (MapFull(map) && !WinRow(map) && !WinColumn(map) && !WinDiagonal(map))
             {
-                Console.WriteLine("Map is full. It is a draw");
+                Console.WriteLine("Map is full. Let's call it a draw");
             }
 
-            Console.WriteLine("Press <ENTER> to exit!");
+            Console.WriteLine("\nPress <ENTER> to exit!");
             Console.ReadLine();
         }
 
-       //method player
-       public static string Player(int playerNumber)
+        //intro tot the game
+        private static void Intro(out string player1, out string player2)
+        {
+            Console.WriteLine("*** Tic Tac Toe ***");
+            Console.WriteLine("Welcome to the game Tic Tac Toe!\n");
+            player1 = Player(1);
+            player2 = Player(2);
+            Console.WriteLine("Lets play\n");
+        }
+
+        //method player
+        public static string Player(int playerNumber)
         {
             Console.WriteLine("Player {0} please enter your name: ", playerNumber);
             string player = Console.ReadLine();
@@ -126,7 +133,7 @@ namespace TicTacToe
                     Console.WriteLine("Wrong input, please enter 1, 2 or 3.");
                     result2 = int.TryParse(Console.ReadLine(), out yChoice);
                 }
-                if (map[xChoice - 1, yChoice - 1] != "0")
+                if (map[yChoice - 1, xChoice - 1] != "0")
                 {
                     Console.WriteLine("This space is taken. Please, try again");
                 }
@@ -142,15 +149,15 @@ namespace TicTacToe
                 Console.Write(i + 1);
                 for (int j = 0; j < map.GetLength(1); j++)
                 {
-                    if (map[i, j] == "0")
+                    if (map[j,i] == "0")
                     {
                         Console.Write(" ");
                     }
-                    if (map[i, j] == "1")
+                    if (map[j,i] == "1")
                     {
                         Console.Write("X");
                     }
-                    if (map[i, j] == "2")
+                    if (map[j,i] == "2")
                     {
                         Console.Write("O");
                     }
@@ -209,9 +216,13 @@ namespace TicTacToe
             {
                 ret = true;
             }
-        
             return ret;
         }
 
+        //method for printing the victory line
+        public static void PrintVictoryLine (string player)
+        {
+            Console.WriteLine("Well done {0}, YOU WON!", player);
+        }
     }
 }
