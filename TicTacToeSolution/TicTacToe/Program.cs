@@ -14,20 +14,15 @@ namespace TicTacToe
             Intro(out player1, out player2);
 
             // print the map
-            string[,] map = new string[3, 3]
-            {
-            {"0","0", "0"},
-            {"0", "0", "0"},
-            {"0" ,"0", "0"}
-            };
+            int[,] map = new int[3, 3];
             Mapgrid(map);
 
             //Turn player 1
             while (!WinRow(map) && !WinColumn(map) && !WinDiagonal(map) && !MapFull(map))
             {
                 PrintTurnAnnouncment(player1);
-                GameTurn(map, out int xChoice, out int yChoice, out bool result1, out bool result2);
-                map[xChoice - 1, yChoice - 1] = "1";
+                GameTurn(map, out int xChoice, out int yChoice);
+                map[xChoice - 1, yChoice - 1] = 1;
                 Mapgrid(map);
                 Console.WriteLine();
                 if (WinRow(map) || WinColumn(map) || WinDiagonal(map) || MapFull(map))
@@ -38,8 +33,8 @@ namespace TicTacToe
                 {
                     //Turn player 2
                     PrintTurnAnnouncment(player2);
-                    GameTurn(map, out xChoice, out yChoice, out result1, out result2);
-                    map[xChoice - 1, yChoice - 1] = "2";
+                    GameTurn(map, out xChoice, out yChoice);
+                    map[xChoice - 1, yChoice - 1] = 2;
                     Mapgrid(map);
                     Console.WriteLine();
                 }
@@ -48,7 +43,9 @@ namespace TicTacToe
             //check who won
             if (WinRow(map))
             {
-                if ((map[0, 0] == "1" && map[0, 1] == "1" && map[0, 2] == "1") || (map[1, 0] == "1" && map[1, 1] == "1" && map[1, 2] == "1") || (map[2, 0] == "1" && map[2, 1] == "1" && map[2, 2] == "1"))
+                if ((map[0, 0] == 1 && map[0, 1] == 1 && map[0, 2] == 1) ||
+                    (map[1, 0] == 1 && map[1, 1] == 1 && map[1, 2] == 1) ||
+                    (map[2, 0] == 1 && map[2, 1] == 1 && map[2, 2] == 1))
                 {
                     PrintVictoryLine(player1);
                 }
@@ -59,7 +56,9 @@ namespace TicTacToe
             }
             if (WinColumn(map))
             {
-                if ((map[0, 0] == "1" && map[1, 0] == "1" && map[2, 0] == "1") || (map[0, 1] == "1" && map[1, 1] == "1" && map[2, 1] == "1") || (map[0, 2] == "1") && map[1, 2] == "1" && map[2, 2] == "1")
+                if ((map[0, 0] == 1 && map[1, 0] == 1 && map[2, 0] == 1) ||
+                    (map[0, 1] == 1 && map[1, 1] == 1 && map[2, 1] == 1) ||
+                    (map[0, 2] == 1) && map[1, 2] == 1 && map[2, 2] == 1)
                 {
                     PrintVictoryLine(player1);
                 }
@@ -70,7 +69,7 @@ namespace TicTacToe
             }
             if (WinDiagonal(map))
             {
-                if (map[1, 1] == "1")
+                if (map[1, 1] == 1)
                 {
                     PrintVictoryLine(player1);
                 }
@@ -119,35 +118,35 @@ namespace TicTacToe
             }
             return player;
         }
-        
+
         // method for players turn
-        private static void GameTurn(string[,] map, out int xChoice, out int yChoice, out bool result1, out bool result2)
+        private static void GameTurn(int[,] map, out int xChoice, out int yChoice)
         {
             do
             {
                 Console.WriteLine("Enter an x coordinate (1,2 or 3): ");
-                result1 = int.TryParse(Console.ReadLine(), out xChoice);
+                bool result1 = int.TryParse(Console.ReadLine(), out xChoice);
                 while (!result1 || xChoice < 1 || xChoice > 3)
                 {
                     Console.WriteLine("Wrong input, please enter 1, 2 or 3.");
                     result1 = int.TryParse(Console.ReadLine(), out xChoice);
                 }
                 Console.WriteLine("Enter a y coordinate (1, 2 or 3): ");
-                result2 = int.TryParse(Console.ReadLine(), out yChoice);
+                bool result2 = int.TryParse(Console.ReadLine(), out yChoice);
                 while (!result2 || yChoice < 1 || yChoice > 3)
                 {
                     Console.WriteLine("Wrong input, please enter 1, 2 or 3.");
                     result2 = int.TryParse(Console.ReadLine(), out yChoice);
                 }
-                if (map[xChoice - 1, yChoice-1] != "0")
+                if (map[xChoice - 1, yChoice - 1] != 0)
                 {
                     Console.WriteLine("This space is taken. Please, try again");
                 }
-            } while (map[xChoice - 1, yChoice - 1] != "0");
+            } while (map[xChoice - 1, yChoice - 1] != 0);
         }
 
         // method for calling the grid
-        public static void Mapgrid(string[,] map)
+        public static void Mapgrid(int[,] map)
         {
             Console.WriteLine(" 123");
             for (int i = 0; i < map.GetLength(0); i++)
@@ -155,82 +154,88 @@ namespace TicTacToe
                 Console.Write(i + 1);
                 for (int j = 0; j < map.GetLength(1); j++)
                 {
-                    if (map[j,i] == "0")
+                    if (map[j, i] == 0)
                     {
                         Console.Write(" ");
                     }
-                    if (map[j,i] == "1")
+                    if (map[j, i] == 1)
                     {
                         Console.Write("X");
                     }
-                    if (map[j,i] == "2")
+                    if (map[j, i] == 2)
                     {
                         Console.Write("O");
                     }
                 }
-                Console.Write(i + 1);
                 Console.WriteLine();
             }
-            Console.WriteLine(" 123");
         }
 
         // win check methods for three in a row, column and diagonally
-        public static bool WinRow(string[,] map)
-        {
-            bool ret = false;
-            if ((map[0, 0] != "0" && map[0, 0] == (map[0, 1]) && (map[0, 1]) == (map[0, 2])) || (map[1, 0] != "0" && map[1, 0] == (map[1, 1]) && (map[1, 1]) == (map[1, 2])) || (map[2, 0] != "0" && map[2, 0] == (map[2, 1]) && (map[2, 1]) == (map[2, 2])))
+            public static bool WinRow(int[,] map)
             {
-                ret = true;
-            }
-            return ret;
-        }
-
-        public static bool WinColumn(string[,] map)
-        {
-            bool ret = false;
-            if ((map[0, 0] != "0" && map[0, 0] == map[1, 0] && map[1, 0] == map[2, 0]) || (map[0, 1] != "0" && map[0, 1] == map[1, 1] && map[1, 1] == map[2, 1]) || (map[0, 2] != "0" && map[0, 2] == map[1, 2] && map[1, 2] == map[2, 2]))
-            {
-                ret = true;
-            }
-            return ret;
-        }
-
-        public static bool WinDiagonal(string[,] map)
-        {
-            bool ret = false;
-            if ((map[1, 1] != "0" && map[0, 0] == map[1, 1] && map[1, 1] == map[2, 2]) || (map[1, 1] != "0" && map[0, 2] == map[1, 1] && map[1, 1] == map[2, 0]))
-            {
-                ret = true;
-            }
-            return ret;
-        }
-
-        //method for check if field is full
-        public static bool MapFull(string [,] map)
-        {
-            bool ret = false;
-            int emptySpotCount = 0;
-            for (int i = 0; i<map.GetLength(0);i++)
-            {
-                for (int j = 0; j < map.GetLength(1); j++)
+                bool ret = false;
+                for (int i = 0; i < map.GetLength(0); i++)
                 {
-                    if( map[i,j] == "0")
+                    if (map[i, 0] != 0)
                     {
-                        emptySpotCount++;
+                        if (map[i, 0] == map[i, 1] && map[i, 1] == map[i, 2])
+                            ret = true;
+                    }
+                }                        
+                return ret;
+            }
+
+            public static bool CheckThreeInColumn(int [,] map, int column)
+            {
+                return (map[0, column] != 0 && map[0, column] == map[1, column] && map[1, column] == map[2, column]);
+            }
+
+            public static bool WinColumn(int [,] map)
+            {
+            return (CheckThreeInColumn(map, 0) ||
+                 CheckThreeInColumn(map, 1) ||
+                 CheckThreeInColumn(map, 2));
+            }
+
+            public static bool WinDiagonal(int[,] map)
+            {
+                bool ret = false;
+                if ((map[1, 1] != 0 && map[0, 0] == map[1, 1] && map[1, 1] == map[2, 2]) ||
+                    (map[1, 1] != 0 && map[0, 2] == map[1, 1] && map[1, 1] == map[2, 0]))
+                {
+                    ret = true;
+                }
+                return ret;
+            }
+
+            //method for check if field is full
+            public static bool MapFull(int[,] map)
+            {
+                bool ret = false;
+                int emptySpotCount = 0;
+                for (int i = 0; i < map.GetLength(0); i++)
+                {
+                    for (int j = 0; j < map.GetLength(1); j++)
+                    {
+                        if (map[i, j] == 0)
+                        {
+                            emptySpotCount++;
+                        }
                     }
                 }
+                if (emptySpotCount == 0)
+                {
+                    ret = true;
+                }
+                return ret;
             }
-            if (emptySpotCount == 0)
-            {
-                ret = true;
-            }
-            return ret;
-        }
 
-        //method for printing the victory line
-        public static void PrintVictoryLine (string player)
-        {
-            Console.WriteLine("Well done {0}, YOU WON!", player);
-        }
+            //method for printing the victory line
+            public static void PrintVictoryLine(string player)
+            {
+                Console.WriteLine("Well done {0}, YOU WON!", player);
+            }
     }
 }
+
